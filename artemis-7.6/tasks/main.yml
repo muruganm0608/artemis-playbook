@@ -1,10 +1,66 @@
 ---
 # tasks file for artemis-7.6
-#- name: Install Artemis server to the path "{{ ARTEMIS_HOME }}"
-#  copy: 
-#   src: files/apache-artemis-2.16.0 
-#   dest: "{{ ARTEMIS_HOME }}"
+- name: Checking if Artemis server is already installed "{{ ARTEMIS_HOME }}"/apache-artemis-2.16.0
+  stat:
+   path: "{{ ARTEMIS_HOME }}"
+  register: STAT_ARTEMIS_HOME
 
-- name: Creating broker instance {{ARTEMIS_INSTANCE}} under {{ARTEMIS_HOME}}
-  shell: "sh {{ARTEMIS_HOME}}/bin/artemis create {{ARTEMIS_HOME}}/bin/{{ARTEMIS_INSTANCE}} --user {{AMQ_USER}} --password {{AMQ_PASSWORD}} --allow-anonymous {{ALLOW_ANONYMOUS}}"
+- name: Checking if Artemis instance is already present "{{ ARTEMIS_HOME }}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}"
+  stat:
+   path: "{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}"
+  register: STAT_ARTEMIS_INSTANCE
+
+- name: Install Artemis server to the path "{{ ARTEMIS_HOME }}"
+  unarchive: 
+   src: files/apache-artemis-2.16.0.tar
+   dest: "{{ ARTEMIS_HOME }}"
+  when: STAT_ARTEMIS_HOME.stat.exists == False
+
+- debug:
+   msg: "{{ ARTEMIS_HOME }} already present"
+  when: STAT_ARTEMIS_HOME.stat.exists == True
+
+- name: Creating broker instance {{ARTEMIS_INSTANCE}} under {{ARTEMIS_HOME}}/apache-artemis-2.16.0
+  shell: "cd {{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/;sh artemis create --user {{AMQ_USER}} --password {{AMQ_PASSWORD}} --allow-anonymous {{ALLOW_ANONYMOUS}} {{ARTEMIS_INSTANCE}} 1>/dev/null "
+  ignore_errors: true
+  when: STAT_ARTEMIS_INSTANCE.stat.exists == False
+- debug:
+   msg: "{{ ARTEMIS_INSTANCE}} is already present"
+  when: STAT_ARTEMIS_INSTANCE.stat.exists == True
+
+- name: Updating the configuration of {{ARTEMIS_INSTANCE}} - artemis.profile
+  template:
+   src: templates/artemis.profile.j2
+   dest: "{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/etc/artemis.profile"
+
+- name: Updating the configuration of {{ARTEMIS_INSTANCE}} - bootstrap.xml
+  template:
+   src: templates/bootstrap.xml.j2
+   dest: "{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/etc/bootstrap.xml"
+
+- name: Copying queue files
+  copy: src=/etc/ansible/roles/artemis-7.6/vars/queue.yml dest="{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/bin/queue.yml"
+
+- name: Updating the configuration of {{ARTEMIS_INSTANCE}} - broker.xml
+  template:
+   src: templates/broker.xml.j2
+   dest: "{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/etc/broker.xml"
+
+- name: Updating the configuration of {{ARTEMIS_INSTANCE}} - jolokia-access.xml
+  template:
+   src: templates/jolokia-access.xml.j2
+   dest: "{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/etc/jolokia-access.xml"
+
+- name: "Check if the service of {{ ARTEMIS_INSTANCE }} is already running or not"
+  shell: cat "{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/data/artemis.pid" | wc -l
+  register: ARTEMIS_INSTANCE_PID_VALUE
+
+- debug:
+   msg: "{{ ARTEMIS_INSTANCE }} {{ ARTEMIS_INSTANCE_PID_VALUE.stdout }} service is already running"
+  when: not ARTEMIS_INSTANCE_PID_VALUE.stdout == "0"
+
+- name: Starting up the AMQ instance {{ARTEMIS_INSTANCE}} {{ ARTEMIS_INSTANCE_PID_VALUE.stdout }}
+  shell: "nohup sh {{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/bin/artemis-service start &"
+  when: ARTEMIS_INSTANCE_PID_VALUE.stdout == "0"
+
 
