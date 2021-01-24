@@ -1,16 +1,26 @@
 ---
 # vars file for artemis-7.6
-jolokia_url: {{INVENTORY_HOSTNAME}}
+jolokia_url: 192.168.56.105
 AMQ_USER: "gpays"
 AMQ_PASSWORD: "gpays"
 ALLOW_ANONYMOUS: "N"
 jolokia_port: 8161
-ARTEMIS_HOME: "/opt/broker/"
-ARTEMIS_INSTANCE: {{jolokia_url}}
+ARTEMIS_HOME: "/opt/broker"
+ARTEMIS_INSTANCE: "amq1"
 ARTEMIS_MIN_HEAP: "1000m"
 ARTEMIS_MAX_HEAP: "2048m"
 ARTEMIS_MAX_DISKUSAGE: 95
-_broker.acceptors:
+_broker_acceptors:
   - name: stomp
     url: "tcp://0.0.0.0:61613?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=STOMP;useEpoll=true"
-
+queue_name:
+- queueA
+- queueB
+- queueC
+- queueD
+- queueE
+- queueF
+- queueG
+- queueH
+- queueI
+- queueJ
