@@ -1,0 +1,4 @@
+---
+- name: running playbook
+  roles: 
+  - artemis-7.6
