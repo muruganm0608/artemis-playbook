@@ -15,17 +15,17 @@
 # specific language governing permissions and limitations
 # under the License.
 
-ARTEMIS_HOME='{{ARTEMIS_HOME}}'
-ARTEMIS_INSTANCE='{{ARTEMIS_HOME}}/bin/{{ARTEMIS_INSTANCE}}'
-ARTEMIS_DATA_DIR='{{ARTEMIS_HOME}}/bin/{{ARTEMIS_INSTANCE}}/data'
-ARTEMIS_ETC_DIR='{{ARTEMIS_HOME}}/bin/{{ARTEMIS_INSTANCE}}/etc'
-ARTEMIS_OOME_DUMP='{{ARTEMIS_HOME}}/bin/{{ARTEMIS_INSTANCE}}/log/oom_dump.hprof'
+ARTEMIS_HOME='{{ARTEMIS_HOME}}/apache-artemis-2.16.0'
+ARTEMIS_INSTANCE='{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}'
+ARTEMIS_DATA_DIR='{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/data'
+ARTEMIS_ETC_DIR='{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/etc'
+ARTEMIS_OOME_DUMP='{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/log/oom_dump.hprof'
 
 # The logging config will need an URI
 # this will be encoded in case you use spaces or special characters
 # on your directory structure
-ARTEMIS_INSTANCE_URI='file:{{ARTEMIS_HOME}}/bin/{{ARTEMIS_INSTANCE}}/'
-ARTEMIS_INSTANCE_ETC_URI='file:{{ARTEMIS_HOME}}/bin/{{ARTEMIS_INSTANCE}}/etc/'
+ARTEMIS_INSTANCE_URI='file:{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/'
+ARTEMIS_INSTANCE_ETC_URI='file:{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/etc/'
 
 # Cluster Properties: Used to pass arguments to ActiveMQ Artemis which can be referenced in broker.xml
 #ARTEMIS_CLUSTER_PROPS="-Dactivemq.remoting.default.port=61617 -Dactivemq.remoting.amqp.port=5673 -Dactivemq.remoting.stomp.port=61614 -Dactivemq.remoting.hornetq.port=5446"

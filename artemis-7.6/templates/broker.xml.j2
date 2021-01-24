@@ -26,7 +26,7 @@ under the License.
    <core xmlns="urn:activemq:core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="urn:activemq:core ">
 
-      <name>{{INVENTORY_HOSTNAME}}</name>
+      <name>{{inventory_hostname}}</name>
 
 
       <persistence-enabled>true</persistence-enabled>
@@ -147,7 +147,7 @@ under the License.
 
 
          <!-- Acceptor for every supported protocol -->
-	{% for acceptors in _broker.acceptors %}
+	{% for acceptors in _broker_acceptors %}
 	<acceptor name="{{acceptors.name}}">{{acceptors.url}}</acceptor>
 	{% endfor %}
       </acceptors>
@@ -211,6 +211,14 @@ under the License.
                <queue name="ExpiryQueue" />
             </anycast>
          </address>
+	
+         {% for q in queue_name %}
+ <address name="{{q}}">
+            <anycast>
+               <queue name="{{q}}" />
+            </anycast>
+         </address>
+	 {% endfor %}
 
       </addresses>
 

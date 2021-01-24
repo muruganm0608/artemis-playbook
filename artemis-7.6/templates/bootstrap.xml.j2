@@ -23,7 +23,7 @@
 
    <!-- artemis.URI.instance is parsed from artemis.instance by the CLI startup.
         This is to avoid situations where you could have spaces or special characters on this URI -->
-   <server configuration="file:/opt/workspace/artemis-7.6/files/apache-artemis-2.16.0/bin/amq1/etc//broker.xml"/>
+   <server configuration="file:{{ARTEMIS_HOME}}/apache-artemis-2.16.0/bin/{{ARTEMIS_INSTANCE}}/etc/broker.xml"/>
 
    <!-- The web server is only bound to localhost by default -->
    <web bind="http://{{jolokia_url}}:{{jolokia_port}}" path="web">
